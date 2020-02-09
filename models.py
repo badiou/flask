@@ -46,7 +46,7 @@ class Plant(db.Model):
         db.session.delete(self)
         db.session.commit()
     
-    def format (self):
+    def format(self):
         return {
             'id':self.id,
             'name':self.name,

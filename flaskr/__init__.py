@@ -15,26 +15,25 @@ def create_app(test_config=None):
 
     @app.route('/plants',methods=['GET'])
     def get_plants():
-        plants=Plant.query.all()
         page=request.args.get('page',1,type=int)
         start=(page-1)*10
         end=start+10
-        formatted_plants=[ plant.format for plant in plants ]
+        plants=Plant.query.all()
+        formated_plants=[plant.format() for plant in plants]
         return jsonify({
             'success':True,
-            'plants': formatted_plants[start:end],
-            'total_plants':len(formatted_plants)
+            'plants':formated_plants[start:end],
+            'total_plants':len(plants)
         })
-
-    @ap.route('/plants/<int:plant_id')
+    @app.route('/plants/<int:plant_id>')
     def get_specific_plant(plant_id):
         plant=Plant.query.filter(Plant.id==plant_id).one_or_none()
         if plant is None:
-            abort(400)
+            abort(404)
         else:
             return jsonify({
                 'success':True,
-                'plant': plant.format()
-            })
+                'plant':plant.format()
+            })    
     return app
     
